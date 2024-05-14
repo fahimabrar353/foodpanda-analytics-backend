@@ -1,0 +1,18 @@
+{
+  "order_address": "50 Lake Circus Rd Dhaka",
+  "order_code": "s6jz-2419-3o5r",
+  "ordered_at": {
+    "date": "2024-05-12 13:01:09"
+  },
+  "total_value": 283,
+  "subtotal": 362,
+  "vendor": {
+    "name": "KFC- Panthapath"
+  },
+
+  "order_products": [
+    {
+      "name": "Chicken & Rice Meal"
+    }
+  ]
+}

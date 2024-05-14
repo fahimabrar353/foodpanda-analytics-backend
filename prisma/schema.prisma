@@ -22,3 +22,24 @@ model Following {
   following   User @relation("following", fields: [followingId], references: [id])
   followingId Int
 }
+
+model Orders {
+  id Int @id @default(autoincrement())
+
+  order_address  String
+  order_code     String
+  ordered_at     String
+  total_value    Int
+  subtotal       Int
+  vendor         String
+  order_products Product[]
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  name     String
+  price    Int
+  Orders   Orders? @relation(fields: [ordersId], references: [id])
+  ordersId Int?
+}
