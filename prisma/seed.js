@@ -1,13 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { AddressService } from './address/address.service';
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-@Injectable()
-export class AppService {
-  constructor(private readonly prisma: PrismaService) {}
-  private readonly addressService: AddressService;
-
-  jsonData = {
+async function main() {
+  // Extracted data from the provided JSON object
+  const jsonData = {
     current_status: {
       code: 16,
       message: 'RESTAURANTS_OTP_OD_PROGRESS_DELIVERED',
@@ -225,57 +221,118 @@ export class AppService {
     payment_refunds: [],
   };
 
-  async getAllOrders() {
-    return this.prisma.order.findMany({
-      include: {
-        restaurant: true,
-        address: true,
-        voucher: true,
-        payment_method: true,
-        ordered_items: {
-          include: {
-            menu_items: true,
-          },
+  // Insert Address===================================================================
+
+  //search address_line_1 in db if not found then create and return id
+
+  const address = prisma.address.searchByName(
+    jsonData.delivery_address.address_line_1,
+  );
+
+  let address_id = address;
+
+  if (address_id) {
+    console.log('Address Found in DB: ');
+    // return address_id;
+  } else {
+    const address = await prisma.address.create({
+      data: {
+        city: jsonData.delivery_address.city,
+        address_line_1: jsonData.delivery_address.address_line_1,
+        address_line_2: jsonData.delivery_address.address_line_2,
+        flat_number: jsonData.delivery_address.flat_number,
+        latitude: jsonData.delivery_address.latitude,
+        longitude: jsonData.delivery_address.longitude,
+      },
+    });
+    address_id = address.id;
+  }
+
+  // Insert Voucher===================================================================
+  //if voucher already exists in db then return id
+  const voucher_id = prisma.voucher.findOne(jsonData.voucher.voucher);
+  if (voucher_id) {
+    console.log(voucher_id);
+  } else {
+    const voucher = await prisma.voucher.create({
+      data: {
+        voucher_code: jsonData.voucher.voucher,
+        value: jsonData.voucher.value,
+      },
+    });
+    voucher_id = voucher.id;
+  }
+
+  // Insert PaymentMethod===================================================================
+  //if paymentMethod already exists in db then return id
+
+  const paymentMethod = await prisma.paymentMethod.create({
+    data: {
+      payment_type_code: jsonData.payment_type_code,
+      payment_group: jsonData.payment.breakdown[0].group,
+    },
+  });
+
+  // Insert Restaurant======================================================================
+  //if restaurant already exists in db then return id
+
+  const restaurant_id = prisma.restaurant.searchByName(jsonData.vendor.name);
+
+  if (!restaurant_id) {
+    const restaurant = await prisma.restaurant.create({
+      data: {
+        restaurant_name: jsonData.vendor.name,
+        address_id: address.id,
+      },
+    });
+    restaurant_id = restaurant.id;
+  }
+
+  // Insert Order============================================================================
+  const order = await prisma.order.create({
+    data: {
+      restaurant_id: restaurant_id,
+      delivery_address: address_id,
+      voucher_id: voucher.id,
+      payment_method_id: paymentMethod.id,
+      order_code: jsonData.order_code,
+      order_time: new Date(jsonData.ordered_at.date),
+      total_value: jsonData.total_value,
+      subtotal: jsonData.subtotal,
+      rider_tip: jsonData.rider_tip,
+    },
+  });
+
+  // Insert OrderedMenuItem(s)================================================================
+  for (const product of jsonData.order_products) {
+    // Assuming menu items are created already in the database
+    const menuItem = await prisma.menuItem.findUnique({
+      where: {
+        // Assuming unique constraint on item_name and restaurant_id
+        item_name_restaurant_id: {
+          item_name: product.name,
+          restaurant_id: restaurant_id,
         },
       },
     });
-  }
 
-  async getOrderById(orderId: number) {
-    return this.prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        restaurant: true,
-        address: true,
-        voucher: true,
-        payment_method: true,
-        ordered_items: {
-          include: {
-            menu_items: true,
-          },
+    if (menuItem) {
+      await prisma.orderedMenuItem.create({
+        data: {
+          order_id: order.id,
+          quantity: product.quantity,
+          menu_items: { connect: { id: menuItem.id } },
         },
-      },
-    });
-  }
-
-  async createOrder(jsonData: any) {
-    console.log('createOrder');
-    const address = this.addressService.searchByName('banani');
-    console.log(address);
-
-    // if (address) {
-    //   console.log('Address Found in DB: ');
-    //   const address_id = (await address)[0].id;
-    // } else {
-    //   const created_address = await this.addressService.create({
-    //     city: jsonData.delivery_address.city,
-    //     address_line_1: jsonData.delivery_address.address_line_1,
-    //     address_line_2: jsonData.delivery_address.address_line_2,
-    //     flat_number: jsonData.delivery_address.flat_number,
-    //     latitude: jsonData.delivery_address.latitude,
-    //     longitude: jsonData.delivery_address.longitude,
-    //   });
-    //   const address_id = created_address.id;
-    // }
+      });
+    }
   }
 }
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

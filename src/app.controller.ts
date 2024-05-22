@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Prisma } from '@prisma/client';
 
 @Controller()
 export class AppController {
@@ -13,5 +14,10 @@ export class AppController {
   @Get()
   async getAllOrders() {
     return this.appService.getAllOrders();
+  }
+
+  @Post()
+  create(@Body() createOrderDto: Prisma.OrderCreateInput) {
+    return this.appService.createOrder(createOrderDto);
   }
 }

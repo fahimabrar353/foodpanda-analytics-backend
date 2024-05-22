@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { Prisma } from '@prisma/client';
@@ -22,6 +23,11 @@ export class RestaurantController {
   @Get()
   findAll() {
     return this.restaurantService.findAll();
+  }
+
+  @Get('search')
+  async searchByName(@Query('restaurant_name') name: string) {
+    return this.restaurantService.searchByName(name);
   }
 
   @Get(':id')

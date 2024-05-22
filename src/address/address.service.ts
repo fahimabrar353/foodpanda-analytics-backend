@@ -18,6 +18,20 @@ export class AddressService {
     return this.prisma.address.findUnique({ where: { id } });
   }
 
+  async searchByName(name: string) {
+    console.log(`Searching for addresses containing: ${name}`);
+    const result = await this.prisma.address.findMany({
+      where: {
+        address_line_1: {
+          contains: name,
+          // mode: 'insensitive',
+        },
+      },
+    });
+    console.log(`Search result: `, result);
+    return result;
+  }
+
   async update(id: number, data: Prisma.AddressUpdateInput): Promise<Address> {
     return this.prisma.address.update({ where: { id }, data });
   }

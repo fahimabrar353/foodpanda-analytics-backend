@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { Prisma } from '@prisma/client';
@@ -22,6 +23,11 @@ export class AddressController {
   @Get()
   findAll() {
     return this.addressService.findAll();
+  }
+
+  @Get('search')
+  async searchByName(@Query('address_line_1') address_line_1: string) {
+    return this.addressService.searchByName(address_line_1);
   }
 
   @Get(':id')
