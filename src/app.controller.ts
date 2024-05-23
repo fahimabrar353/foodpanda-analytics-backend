@@ -6,18 +6,13 @@ import { Prisma } from '@prisma/client';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(':id')
-  async getOrderById(@Param('id') id: string) {
-    return this.appService.getOrderById(+id);
-  }
+  // @Get(':id')
+  // async getOrderById(@Param('id') id: string) {
+  //   return this.appService.getOrderById(+id);
+  // }
 
-  @Get()
-  async getAllOrders() {
-    return this.appService.getAllOrders();
-  }
-
-  @Post()
-  create(@Body() createOrderDto: Prisma.OrderCreateInput) {
-    return this.appService.createOrder(createOrderDto);
-  }
+  // @Get()
+  // async getAllOrders() {
+  //   return this.appService.getAllOrders();
+  // }
 }

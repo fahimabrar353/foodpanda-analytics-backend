@@ -27,7 +27,9 @@ export class RestaurantController {
 
   @Get('search')
   async searchByName(@Query('restaurant_name') name: string) {
-    return this.restaurantService.searchByName(name);
+    // console.log(`Searching for restaurants containing: ${name}`);
+    const result = await this.restaurantService.searchByName(name);
+    return result;
   }
 
   @Get(':id')

@@ -14,9 +14,14 @@ import { Prisma } from '@prisma/client';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  // @Post()
+  // create(@Body() createOrderDto: Prisma.OrderCreateInput) {
+  //   return this.orderService.create(createOrderDto);
+  // }
+
   @Post()
   create(@Body() createOrderDto: Prisma.OrderCreateInput) {
-    return this.orderService.create(createOrderDto);
+    return this.orderService.createOrder(createOrderDto);
   }
 
   @Get()

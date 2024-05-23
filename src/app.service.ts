@@ -1,281 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { AddressService } from './address/address.service';
 
 @Injectable()
 export class AppService {
   constructor(private readonly prisma: PrismaService) {}
-  private readonly addressService: AddressService;
 
-  jsonData = {
-    current_status: {
-      code: 16,
-      message: 'RESTAURANTS_OTP_OD_PROGRESS_DELIVERED',
-      type: 'final',
-      changedAt: {
-        date: '2024-05-12 13:14:51',
-        timezone: 'Asia/Dhaka',
-      },
-      internal_status_code: '621 - ',
-    },
-    order_address: '50 Lake Circus Rd Dhaka',
-    delivery_address: {
-      id: 25160777,
-      city: 'Dhaka',
-      address_line_1: 'Lake Circus Rd',
-      address_line_2: '50',
-      address_line_3: 'Kalabagan',
-      address_line_4: '',
-      address_line_5: '',
-      address_other: '',
-      room: '',
-      flat_number: 'House 50',
-      structure: '',
-      building: '',
-      floor: '',
-      district: '',
-      postcode: '',
-      company: '',
-      latitude: 23.7514388,
-      longitude: 90.3807573,
-      delivery_instructions: 'lift er 7',
-    },
-    order_id: 0,
-    order_code: 's6jz-2419-3o5r',
-    ordered_at: {
-      date: '2024-05-12 13:01:09',
-      timezone: 'Asia/Dhaka',
-    },
-    confirmed_delivery_time: {
-      date: '2024-05-12 13:14:51',
-      timezone: 'Asia/Dhaka',
-    },
-    total_value: 283,
-    subtotal: 362,
-    vendor: {
-      id: 0,
-      code: 's6jz',
-      name: 'KFC- Panthapath',
-      logo: '',
-      service_tax_percentage_amount: 0,
-      service_fee_percentage_amount: 0,
-      vat_percentage_amount: 0,
-      is_service_fee_enabled: false,
-      is_service_tax_visible: false,
-      is_service_tax_enabled: false,
-      is_vat_visible: false,
-      is_vat_disabled: false,
-      address: '',
-      latitude: 23.75284625,
-      longitude: 90.38105515,
-      primary_cuisine_id: 241,
-      metadata: {
-        timezone: 'Asia/Dhaka',
-      },
-      city_id: 0,
-      vertical: 'restaurants',
-      hero_listing_image:
-        'https://images.deliveryhero.io/image/fd-bd/LH/s6jz-listing.jpg',
-    },
-    voucher: {
-      voucher: 'vzbw7xel',
-      expirationDate: 1715709599000,
-      type: 'amount',
-      value: 50,
-      description: '',
-    },
-    order_products: [
-      {
-        name: 'Chicken & Rice Meal',
-        name_attributes: {
-          style: 'highlight',
-          text_color: 'neutral_primary',
-          value: 'Chicken & Rice Meal',
-          placeholders: null,
-        },
-        quantity_attributes: {
-          style: 'highlight',
-          text_color: 'neutral_primary',
-          value: 1,
-          placeholders: null,
-        },
-        toppings_attributes: null,
-        special_instructions_attributes: {
-          style: 'body_sm',
-          text_color: 'neutral_secondary',
-          value: '',
-          placeholders: null,
-        },
-        subtitle_attributes: null,
-        price_attributes: {
-          style: 'body',
-          text_color: 'neutral_primary',
-          value: 362,
-          placeholders: null,
-        },
-        total_price: 362,
-        quantity: 1,
-        sold_out: false,
-        tag: null,
-        status: 'available',
-        weight_attributes: null,
-        replacement_products: [],
-        replacement_attributes: null,
-        is_meal_for_one: false,
-      },
-    ],
-    sms_verification_needed: false,
-    order_already_rated: false,
-    rating: 5,
-    has_been_reported_late: false,
-    rider_tip: 0,
-    charity: 0,
-    service_fee_total: 4,
-    difference_to_minimum: 0,
-    difference_to_minimum_with_vat: 0,
-    expedition_type: 'delivery',
-    server_time: {
-      date: '2024-05-14 11:08:11',
-      timezone: 'Asia/Dhaka',
-    },
-    payment_type_code: 'antfinancial_bkash',
-    payment: {
-      breakdown: [
-        {
-          code: 'antfinancial_bkash',
-          group: 'online_payment',
-          translation_key: 'OTP_PAID_WITH_ONLINE_PAYMENT',
-          amount: 283,
-        },
-      ],
-    },
-    delivery_features: {
-      show_map: false,
-      display_map: false,
-      show_cart: false,
-      show_statuses: false,
-      show_vendor_contact: false,
-      show_vendor_delivery_time: false,
-      show_rider_chat: false,
-      show_payment_breakdown: true,
-      show_help_button: false,
-    },
-    delivery_provider: 'own_delivery_foodpanda',
-    is_cancellable: false,
-    status_flags: {
-      is_paid: true,
-      is_active: false,
-      is_picked_up: false,
-      is_delivered: true,
-      is_canceled: false,
-      is_preorder: false,
-      is_preorder_active: false,
-      is_past_order: true,
-      is_completed: true,
-      is_reorderable: true,
-      is_reorderable_after_cancellation: false,
-      is_rateable: false,
-      is_meal_for_one: false,
-    },
-    dynamic_fees: [
-      {
-        translation_key: 'NEXTGEN_CART_SUBTOTAL',
-        value: 362,
-        style: 'body',
-        text_color: 'neutral_secondary',
-        tag: null,
-      },
-      {
-        translation_key: 'NEXTGEN_CART_DISCOUNT',
-        value: -33,
-        style: 'body',
-        text_color: 'neutral_secondary',
-        tag: {
-          type: 'primary',
-        },
-      },
-      {
-        translation_key: 'NEXTGEN_CART_SERVICE_FEE',
-        value: 4,
-        style: 'body',
-        text_color: 'neutral_secondary',
-        tag: null,
-      },
-      {
-        translation_key: 'NEXTGEN_COUT_VOUCHER',
-        name: 'vzbw7xel',
-        value: -50,
-        style: 'body',
-        text_color: 'neutral_secondary',
-        tag: null,
-      },
-      {
-        translation_key: 'NEXTGEN_TOTAL_VAT',
-        value: 283,
-        style: 'title_sm',
-        text_color: 'neutral_primary',
-        tag: null,
-      },
-    ],
-    loyalty: null,
-    status_messages: {
-      titles: [],
-    },
-    status_history: [],
-    payment_refunds: [],
-  };
+  // async getAllOrders() {
+  //   return this.prisma.order.findMany({
+  //     include: {
+  //       restaurant: true,
+  //       address: true,
+  //       voucher: true,
+  //       payment_method: true,
+  //       ordered_items: {
+  //         include: {
+  //           menu_items: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
-  async getAllOrders() {
-    return this.prisma.order.findMany({
-      include: {
-        restaurant: true,
-        address: true,
-        voucher: true,
-        payment_method: true,
-        ordered_items: {
-          include: {
-            menu_items: true,
-          },
-        },
-      },
-    });
-  }
-
-  async getOrderById(orderId: number) {
-    return this.prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        restaurant: true,
-        address: true,
-        voucher: true,
-        payment_method: true,
-        ordered_items: {
-          include: {
-            menu_items: true,
-          },
-        },
-      },
-    });
-  }
-
-  async createOrder(jsonData: any) {
-    console.log('createOrder');
-    const address = this.addressService.searchByName('banani');
-    console.log(address);
-
-    // if (address) {
-    //   console.log('Address Found in DB: ');
-    //   const address_id = (await address)[0].id;
-    // } else {
-    //   const created_address = await this.addressService.create({
-    //     city: jsonData.delivery_address.city,
-    //     address_line_1: jsonData.delivery_address.address_line_1,
-    //     address_line_2: jsonData.delivery_address.address_line_2,
-    //     flat_number: jsonData.delivery_address.flat_number,
-    //     latitude: jsonData.delivery_address.latitude,
-    //     longitude: jsonData.delivery_address.longitude,
-    //   });
-    //   const address_id = created_address.id;
-    // }
-  }
+  // async getOrderById(orderId: number) {
+  //   return this.prisma.order.findUnique({
+  //     where: { id: orderId },
+  //     include: {
+  //       restaurant: true,
+  //       address: true,
+  //       voucher: true,
+  //       payment_method: true,
+  //       ordered_items: {
+  //         include: {
+  //           menu_items: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 }

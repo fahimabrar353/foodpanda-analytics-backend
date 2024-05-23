@@ -6,5 +6,6 @@ import { PrismaService } from 'src/prisma.service';
 @Module({
   providers: [VoucherService, PrismaService],
   controllers: [VoucherController],
+  exports: [VoucherService],
 })
 export class VoucherModule {}

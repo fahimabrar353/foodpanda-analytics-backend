@@ -19,7 +19,7 @@ export class AddressService {
   }
 
   async searchByName(name: string) {
-    console.log(`Searching for addresses containing: ${name}`);
+    // console.log(`Searching for addresses containing: ${name}`);
     const result = await this.prisma.address.findMany({
       where: {
         address_line_1: {
@@ -28,7 +28,7 @@ export class AddressService {
         },
       },
     });
-    console.log(`Search result: `, result);
+    // console.log(`Search result: `, result);
     return result;
   }
 

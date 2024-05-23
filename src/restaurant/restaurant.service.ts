@@ -14,20 +14,6 @@ export class RestaurantService {
     return this.prisma.restaurant.findMany();
   }
 
-  async searchByName(name: string): Promise<Restaurant[]> {
-    console.log(`Searching for restaurant containing: ${name}`);
-    const result = await this.prisma.restaurant.findMany({
-      where: {
-        restaurant_name: {
-          contains: name,
-          // mode: 'insensitive',
-        },
-      },
-    });
-    console.log(`Search result: `, result);
-    return result;
-  }
-
   async findOne(id: number): Promise<Restaurant> {
     return this.prisma.restaurant.findUnique({ where: { id } });
   }
@@ -41,5 +27,25 @@ export class RestaurantService {
 
   async remove(id: number): Promise<Restaurant> {
     return this.prisma.restaurant.delete({ where: { id } });
+  }
+
+  async findByCode(code: string): Promise<Restaurant> {
+    const result = await this.prisma.restaurant.findUnique({
+      where: { restaurant_code: code },
+    });
+    return result;
+  }
+
+  async searchByName(name: string): Promise<Restaurant[]> {
+    // console.log(`Searching for restaurant containing: ${name}`);
+    const result = await this.prisma.restaurant.findMany({
+      where: {
+        restaurant_name: {
+          contains: name,
+          // mode: 'insensitive',
+        },
+      },
+    });
+    return result;
   }
 }

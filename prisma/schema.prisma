@@ -38,6 +38,7 @@ model Address {
 model Restaurant {
   id              Int        @id @default(autoincrement())
   restaurant_name String
+  restaurant_code String     @unique
   address_id      Int
   address         Address    @relation(fields: [address_id], references: [id])
   menu_items      MenuItem[]
@@ -47,12 +48,12 @@ model Restaurant {
 }
 
 model MenuItem {
-  id            Int               @id @default(autoincrement())
-  restaurant_id Int
-  item_name     String
-  price         Float
-  restaurant    Restaurant        @relation(fields: [restaurant_id], references: [id])
-  ordered_items OrderedMenuItem[]
+  id              Int               @id @default(autoincrement())
+  restaurant_code String
+  item_name       String
+  price           Float
+  restaurant      Restaurant        @relation(fields: [restaurant_code], references: [restaurant_code])
+  ordered_items   OrderedMenuItem[]
 }
 
 model OrderedMenuItem {
@@ -69,7 +70,7 @@ model Order {
   restaurant_id     Int
   delivery_address  Int
   voucher_id        Int?
-  payment_method_id Int
+  payment_method_id Int?
   order_code        String            @unique
   order_time        DateTime          @default(now())
   total_value       Float
@@ -78,6 +79,6 @@ model Order {
   restaurant        Restaurant        @relation(fields: [restaurant_id], references: [id])
   address           Address           @relation(fields: [delivery_address], references: [id])
   voucher           Voucher?          @relation(fields: [voucher_id], references: [id])
-  payment_method    PaymentMethod     @relation(fields: [payment_method_id], references: [id])
+  payment_method    PaymentMethod?    @relation(fields: [payment_method_id], references: [id])
   ordered_items     OrderedMenuItem[]
 }

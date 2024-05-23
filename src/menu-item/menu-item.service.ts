@@ -28,4 +28,16 @@ export class MenuItemService {
   async remove(id: number): Promise<MenuItem> {
     return this.prisma.menuItem.delete({ where: { id } });
   }
+
+  async searchByName(name: string): Promise<MenuItem[]> {
+    const result = await this.prisma.menuItem.findMany({
+      where: {
+        item_name: {
+          contains: name,
+          // mode: 'insensitive',
+        },
+      },
+    });
+    return result;
+  }
 }
