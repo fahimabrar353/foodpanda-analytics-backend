@@ -24,10 +24,10 @@ export class VoucherController {
     return this.voucherService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.voucherService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') findByVoucherCode: string) {
+  //   return this.voucherService.findByVoucherCode(voucher_code);
+  // }
 
   @Patch(':id')
   update(

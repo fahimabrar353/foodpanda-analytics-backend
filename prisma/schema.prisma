@@ -16,7 +16,7 @@ model Voucher {
 
 model PaymentMethod {
   id                Int     @id @default(autoincrement())
-  payment_type_code String
+  payment_type_code String  @unique
   payment_group     String
   orders            Order[]
 }

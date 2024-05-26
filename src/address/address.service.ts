@@ -18,7 +18,7 @@ export class AddressService {
     return this.prisma.address.findUnique({ where: { id } });
   }
 
-  async searchByName(name: string) {
+  async findByAddressLine1(name: string) {
     // console.log(`Searching for addresses containing: ${name}`);
     const result = await this.prisma.address.findMany({
       where: {

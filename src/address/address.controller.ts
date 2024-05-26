@@ -27,7 +27,7 @@ export class AddressController {
 
   @Get('search')
   async searchByName(@Query('address_line_1') address_line_1: string) {
-    return this.addressService.searchByName(address_line_1);
+    return this.addressService.findByAddressLine1(address_line_1);
   }
 
   @Get(':id')

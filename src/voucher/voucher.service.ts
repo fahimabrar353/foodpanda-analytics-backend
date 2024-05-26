@@ -16,9 +16,9 @@ export class VoucherService {
     return this.prisma.voucher.findMany();
   }
 
-  async findOne(id: number): Promise<Voucher> {
+  async findByVoucherCode(voucher_code: string): Promise<Voucher> {
     return this.prisma.voucher.findUnique({
-      where: { id },
+      where: { voucher_code },
     });
   }
 

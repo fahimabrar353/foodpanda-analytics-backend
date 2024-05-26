@@ -18,6 +18,14 @@ export class PaymentMethodService {
     return this.prisma.paymentMethod.findUnique({ where: { id } });
   }
 
+  async findByPaymentTypeCode(
+    payment_type_code: string,
+  ): Promise<PaymentMethod> {
+    return this.prisma.paymentMethod.findUnique({
+      where: { payment_type_code },
+    });
+  }
+
   async update(
     id: number,
     data: Prisma.PaymentMethodUpdateInput,

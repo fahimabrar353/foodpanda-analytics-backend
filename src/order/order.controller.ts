@@ -19,9 +19,14 @@ export class OrderController {
   //   return this.orderService.create(createOrderDto);
   // }
 
-  @Post()
-  create(@Body() createOrderDto: Prisma.OrderCreateInput) {
-    return this.orderService.createOrder(createOrderDto);
+  // @Post()
+  // create(@Body() createOrderDto: Prisma.OrderCreateInput) {
+  //   return this.orderService.createOrder(createOrderDto);
+  // }
+
+  @Get('import')
+  import() {
+    return this.orderService.importOrder();
   }
 
   @Get()
