@@ -27,12 +27,15 @@ export class OrderService {
     return this.prisma.order.create({ data });
   }
 
-  async findAll(): Promise<Order[]> {
-    return this.prisma.order.findMany();
+  async findAll() {
+    return this.prisma.order.findMany({ include: { restaurant: true } });
   }
 
   async findOne(id: number): Promise<Order> {
-    return this.prisma.order.findUnique({ where: { id } });
+    return this.prisma.order.findUnique({
+      where: { id },
+      include: { restaurant: true },
+    });
   }
 
   async update(id: number, data: Prisma.OrderUpdateInput): Promise<Order> {
