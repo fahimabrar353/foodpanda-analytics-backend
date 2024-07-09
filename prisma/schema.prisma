@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,15 +7,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id         Int         @id @default(autoincrement())
-  name       String?
-  followedBy Following[] @relation("following")
+model Voucher {
+  id           Int     @id @default(autoincrement())
+  voucher_code String  @unique
+  value        Float
+  orders       Order[]
 }
 
-model Following {
-  id Int @id @default(autoincrement())
+model PaymentMethod {
+  id                Int     @id @default(autoincrement())
+  payment_type_code String  @unique
+  payment_group     String
+  orders            Order[]
+}
 
-  following   User @relation("following", fields: [followingId], references: [id])
-  followingId Int
+model Address {
+  id             Int          @id @default(autoincrement())
+  city           String
+  address_line_1 String
+  address_line_2 String?
+  flat_number    String
+  latitude       Float
+  longitude      Float
+  restaurants    Restaurant[]
+  orders         Order[]
+
+  @@index([city])
+}
+
+model Restaurant {
+  id              Int        @id @default(autoincrement())
+  restaurant_name String
+  restaurant_code String     @unique
+  address_id      Int
+  address         Address    @relation(fields: [address_id], references: [id])
+  menu_items      MenuItem[]
+  orders          Order[]
+
+  @@index([restaurant_name])
+}
+
+model MenuItem {
+  id              Int               @id @default(autoincrement())
+  restaurant_code String
+  item_name       String
+  price           Float
+  restaurant      Restaurant        @relation(fields: [restaurant_code], references: [restaurant_code])
+  ordered_items   OrderedMenuItem[]
+}
+
+model OrderedMenuItem {
+  id         Int        @id @default(autoincrement())
+  order_id   Int
+  // menu_item_id Int
+  quantity   Int
+  order      Order      @relation(fields: [order_id], references: [id])
+  menu_items MenuItem[]
+}
+
+model Order {
+  id                Int               @id @default(autoincrement())
+  restaurant_id     Int
+  delivery_address  Int
+  voucher_id        Int?
+  payment_method_id Int?
+  order_code        String            @unique
+  order_time        DateTime          @default(now())
+  total_value       Float
+  subtotal          Float
+  rider_tip         Float
+  restaurant        Restaurant        @relation(fields: [restaurant_id], references: [id])
+  address           Address           @relation(fields: [delivery_address], references: [id])
+  voucher           Voucher?          @relation(fields: [voucher_id], references: [id])
+  payment_method    PaymentMethod?    @relation(fields: [payment_method_id], references: [id])
+  ordered_items     OrderedMenuItem[]
 }
